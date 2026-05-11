@@ -18,8 +18,5 @@ phases:
       - docker push 115228050885.dkr.ecr.us-east-1.amazonaws.com/node-app-ecr:latest
 
       - echo Deploy ECS...
-      - aws ecs update-service \
-          --cluster node-app-cluster \
-          --service node-app-service \
-          --force-new-deployment \
-          --region us-east-1
+      - aws ecs update-service --cluster node-app-cluster --service node-app-service --force-new-deployment --region us-east-1
+
