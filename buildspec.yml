@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 115228050885.dkr.ecr.us-east-1.amazonaws.com
+
+  build:
+    commands:
+      - echo Build started...
+      - docker build -t node-app .
+      - docker tag node-app:latest 115228050885.dkr.ecr.us-east-1.amazonaws.com/node-app-ecr:latest
+
+  post_build:
+    commands:
+      - echo Push image...
+      - docker push 115228050885.dkr.ecr.us-east-1.amazonaws.com/node-app-ecr:latest
+
+      - echo Deploy ECS...
+      - aws ecs update-service \
+          --cluster node-app-cluster \
+          --service node-app-service \
+          --force-new-deployment \
+          --region us-east-1
